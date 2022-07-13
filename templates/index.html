@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-
+    <meta charset="UTF-8">
     <!-- Webpage Title -->
-    <title>Home | D3Worklog</title>
+    <title>Home | Workout log</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -13,12 +13,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <!-- Font Awesome CSS -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
-    <!-- JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+And+White+Picture&family=Hi+Melody&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='sign_up.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
 
+    <script>
+        $(document).ready(function(){
+          get_posts()
+        })
+    </script>
 </head>
 <body>
 <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
@@ -91,11 +96,7 @@
                 </div>
                 <div class="media-content">
                     <div class="content">
-                        <p>
-                            <strong>홍길동</strong> <small>@username</small> <small>10분 전</small>
-                            <br>
-                            글을 적는 칸
-                        </p>
+
                     </div>
                     <nav class="level is-mobile">
                         <div class="level-left">
