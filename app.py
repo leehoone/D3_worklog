@@ -16,6 +16,7 @@ SECRET_KEY = 'SPARTA'
 client = MongoClient("mongodb+srv://test:sparta@cluster0.uwsix.mongodb.net/Clust0?retryWrites=true&w=majority")
 db = client.dbsparta_plus_week4
 
+
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
@@ -23,7 +24,6 @@ def home():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload["id"]})
         return render_template('index.html', user_info=user_info)
-
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -34,7 +34,6 @@ def home():
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
-
 
 @app.route('/user/<username>')
 def user(username):
@@ -101,22 +100,7 @@ def save_img():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        username = payload["id"]
-        name_receive = request.form["name_give"]
-        about_receive = request.form["about_give"]
-        new_doc = {
-            "profile_name": name_receive,
-            "profile_info": about_receive
-        }
-        if 'file_give' in request.files:
-            file = request.files["file_give"]
-            filename = secure_filename(file.filename)
-            extension = filename.split(".")[-1]
-            file_path = f"profile_pics/{username}.{extension}"
-            file.save("./static/"+file_path)
-            new_doc["profile_pic"] = filename
-            new_doc["profile_pic_real"] = file_path
-        db.users.update_one({'username': payload['id']}, {'$set':new_doc})
+        # 프로필 업데이트
         return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
@@ -148,17 +132,12 @@ def get_posts():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        username_receive = request.args.get("username_give")
-        if username_receive == "":
-            posts = list(db.posts.find({}).sort("date", -1).limit(20))
-        else:
-            posts = list(db.posts.find({"username": username_receive}).sort("date", -1).limit(20))
-
+        posts = list(db.posts.find({}).sort("date", -1).limit(20))
         for post in posts:
             post["_id"] = str(post["_id"])
             post["count_heart"] = db.likes.count_documents({"post_id": post["_id"], "type": "heart"})
             post["heart_by_me"] = bool(db.likes.find_one({"post_id": post["_id"], "type": "heart", "username": payload['id']}))
-        return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.","posts":posts})
+        return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다.", "posts": posts})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
@@ -168,7 +147,6 @@ def update_like():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 좋아요 수
         user_info = db.users.find_one({"username": payload["id"]})
         post_id_receive = request.form["post_id_give"]
         type_receive = request.form["type_give"]
