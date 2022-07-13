@@ -84,6 +84,12 @@ function num2str(count) {
     return count
 }
 
+function sign_out() {
+    $.removeCookie('mytoken', {path: '/'});
+    alert('로그아웃!')
+    window.location.href = "/login"
+}
+
 function get_posts(username) {
     if (username == undefined) {
         username = ""
@@ -103,36 +109,37 @@ function get_posts(username) {
                     let class_heart = post['heart_by_me'] ? "fa-heart" : "fa-heart-o"
                     let count_heart = post['count_heart']
                     let html_temp = `<div class="box" id="${post["_id"]}">
-                                        <article class="media">
-                                            <div class="media-left">
-                                                <a class="image is-64x64" href="/user/${post['username']}">
-                                                    <img class="is-rounded" src="/static/${post['profile_pic_real']}"
-                                                         alt="Image">
-                                                </a>
-                                            </div>
-                                            <div class="media-content">
-                                                <div class="content">
-                                                    <p>
-                                                        <strong>${post['profile_name']}</strong> <small>@${post['username']}</small> <small>${time_before}</small>
-                                                        <br>
-                                                        ${post['comment']}
-                                                    </p>
-                                                </div>
-                                                <nav class="level is-mobile">
-                                                    <div class="level-left">
-                                                        <a class="level-item is-sparta" aria-label="heart" onclick="toggle_like('${post['_id']}', 'heart')">
-                                                            <span class="icon is-small"><i class="fa ${class_heart}"
-                                                                                           aria-hidden="true"></i></span>&nbsp;<span class="like-num">${num2str(count_heart)}</span>
+                                                <article class="media">
+                                                    <div class="media-left">
+                                                        <a class="image is-64x64" href="/user/${post['username']}">
+                                                            <img class="is-rounded" src="/static/${post['profile_pic_real']}"
+                                                                 alt="Image">
                                                         </a>
                                                     </div>
+                                                    <div class="media-content">
+                                                        <div class="content">
+                                                            <p>
+                                                                <strong>${post['profile_name']}</strong> <small>@${post['username']}</small> <small>${time_before}</small>
+                                                                <br>
+                                                                ${post['comment']}
+                                                            </p>
+                                                        </div>
+                                                        <nav class="level is-mobile">
+                                                            <div class="level-left">
+                                                                <a class="level-item is-sparta" aria-label="heart" onclick="toggle_like('${post['_id']}', 'heart')">
+                                                                    <span class="icon is-small"><i class="fa ${class_heart}"
+                                                                                                   aria-hidden="true"></i></span>&nbsp;<span class="like-num">${num2str(count_heart)}</span>
+                                                                </a>
+                                                            </div>
 
-                                                </nav>
-                                            </div>
-                                        </article>
-                                    </div>`
+                                                        </nav>
+                                                    </div>
+                                                </article>
+                                            </div>`
                     $("#post-box").append(html_temp)
                 }
             }
         }
     })
 }
+
